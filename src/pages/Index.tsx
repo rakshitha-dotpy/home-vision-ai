@@ -1,16 +1,42 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState, useCallback } from "react";
+import Navbar from "@/components/Navbar";
+import DesignSidebar from "@/components/DesignSidebar";
+import ResultPanel from "@/components/ResultPanel";
+import LoadingOverlay from "@/components/LoadingOverlay";
 
-// IMPORTANT: Fully REPLACE this with your own code
-const PlaceholderIndex = () => {
-  // PLACEHOLDER: Replace this entire return statement with the user's app.
-  // The inline background color is intentionally not part of the design system.
+interface Config {
+  mood: string;
+  budget: number;
+  style: string;
+  image: string | null;
+}
+
+export default function Index() {
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [hasResult, setHasResult] = useState(false);
+  const [config, setConfig] = useState<Config | null>(null);
+
+  const handleGenerate = useCallback((c: Config) => {
+    setConfig(c);
+    setIsGenerating(true);
+    setHasResult(false);
+    setTimeout(() => {
+      setIsGenerating(false);
+      setHasResult(true);
+    }, 2500);
+  }, []);
+
   return (
-    <div className="flex min-h-screen items-center justify-center" style={{ backgroundColor: '#fcfbf8' }}>
-      <img data-lovable-blank-page-placeholder="REMOVE_THIS" src="/placeholder.svg" alt="Your app will live here!" />
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <div className="flex flex-1 flex-col lg:flex-row">
+        <DesignSidebar onGenerate={handleGenerate} isGenerating={isGenerating} />
+        {isGenerating ? (
+          <LoadingOverlay />
+        ) : (
+          <ResultPanel hasResult={hasResult} config={config} />
+        )}
+      </div>
     </div>
   );
-};
-
-const Index = PlaceholderIndex;
-
-export default Index;
+}
