@@ -1,4 +1,6 @@
 import { useState, useRef } from "react";
+import heroRoom from "@/assets/hero-room.jpg";
+import roomLuxury from "@/assets/room-luxury.jpg";
 
 export default function BeforeAfter() {
   const [position, setPosition] = useState(50);
@@ -14,47 +16,39 @@ export default function BeforeAfter() {
   return (
     <div
       ref={containerRef}
-      className="glass-card overflow-hidden relative cursor-col-resize select-none"
-      style={{ height: 340 }}
+      className="rounded-2xl overflow-hidden relative cursor-col-resize select-none border border-white/[0.08]"
+      style={{ height: 360 }}
       onMouseMove={(e) => { if (e.buttons === 1) handleMove(e.clientX); }}
       onTouchMove={(e) => handleMove(e.touches[0].clientX)}
     >
-      {/* Before */}
-      <div className="absolute inset-0 bg-gradient-to-br from-muted/40 to-muted/20 flex items-center justify-center">
-        <div className="text-center space-y-3 opacity-50">
-          <div className="w-16 h-12 mx-auto bg-white/10 rounded-lg" />
-          <div className="w-20 h-3 mx-auto bg-white/10 rounded" />
-          <div className="w-12 h-8 mx-auto bg-white/5 rounded" />
-        </div>
+      {/* Before - original room */}
+      <div className="absolute inset-0">
+        <img src={heroRoom} alt="Before" className="w-full h-full object-cover grayscale opacity-60" />
       </div>
 
-      {/* After */}
+      {/* After - transformed room */}
       <div
-        className="absolute inset-0 bg-gradient-to-br from-primary/10 via-card to-secondary/10 flex items-center justify-center overflow-hidden"
+        className="absolute inset-0 overflow-hidden"
         style={{ clipPath: `inset(0 ${100 - position}% 0 0)` }}
       >
-        <div className="text-center space-y-3">
-          <div className="w-16 h-12 mx-auto bg-primary/20 rounded-lg border border-primary/20" />
-          <div className="w-20 h-3 mx-auto bg-secondary/15 rounded" />
-          <div className="w-12 h-8 mx-auto bg-success/10 rounded border border-success/10" />
-        </div>
+        <img src={roomLuxury} alt="After" className="w-full h-full object-cover" />
       </div>
 
       {/* Divider */}
       <div
-        className="absolute top-0 bottom-0 w-0.5 bg-white/40 z-10"
+        className="absolute top-0 bottom-0 w-0.5 bg-white/60 z-10"
         style={{ left: `${position}%` }}
       >
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
-          <span className="text-xs">⟷</span>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 backdrop-blur-md border border-white/30 flex items-center justify-center shadow-lg">
+          <span className="text-sm">⟷</span>
         </div>
       </div>
 
       {/* Labels */}
-      <span className="absolute top-3 left-3 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white/5 text-muted-foreground">
+      <span className="absolute top-3 left-3 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-black/40 backdrop-blur-sm text-white/70 z-20">
         Before
       </span>
-      <span className="absolute top-3 right-3 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-primary/15 text-primary">
+      <span className="absolute top-3 right-3 text-[10px] font-semibold px-2.5 py-1 rounded-full bg-primary/30 backdrop-blur-sm text-primary z-20">
         After
       </span>
     </div>
