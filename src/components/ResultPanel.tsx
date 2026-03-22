@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { TrendingUp, Eye } from "lucide-react";
+import { useState, useEffect } from "react";
+import { TrendingUp, Eye, ArrowRight, Sparkles } from "lucide-react";
 import Preview3D from "./tabs/Preview3D";
 import BeforeAfter from "./tabs/BeforeAfter";
 import Suggestions from "./tabs/Suggestions";
@@ -34,69 +34,114 @@ export default function ResultPanel({ hasResult, config }: Props) {
 
   if (!hasResult) {
     return (
-      <div className="flex-1 p-5 lg:p-8 overflow-y-auto max-h-[calc(100vh-4rem)] relative">
-        {/* Background glow */}
-        <div className="absolute top-20 right-20 w-96 h-96 bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
-        <div className="absolute bottom-20 left-20 w-72 h-72 bg-secondary/5 rounded-full blur-[100px] pointer-events-none" />
+      <div className="flex-1 overflow-y-auto max-h-[calc(100vh-4rem)] relative">
+        {/* Background glow blobs */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/[0.04] rounded-full blur-[150px] pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-secondary/[0.03] rounded-full blur-[120px] pointer-events-none" />
 
-        {/* Hero trending card */}
-        <div className="mb-6 animate-fade-up">
-          <div className="relative rounded-2xl overflow-hidden group cursor-pointer" style={{ height: 240 }}>
-            <img
-              src={heroRoom}
-              alt="Trending design"
-              className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-5">
-              <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="w-3.5 h-3.5 text-secondary" />
-                <span className="text-[10px] font-semibold text-secondary uppercase tracking-widest">Trending Design</span>
+        {/* HERO — the "aha" moment */}
+        <div className="relative overflow-hidden">
+          {/* Big before/after hero image */}
+          <div className="relative h-[280px] lg:h-[320px] overflow-hidden">
+            <img src={heroRoom} alt="Before room" className="absolute inset-0 w-full h-full object-cover" />
+            {/* Gradient overlay split */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#08090f] via-transparent to-[#08090f]/40" />
+
+            {/* Hero content */}
+            <div className="absolute inset-0 flex items-center px-6 lg:px-10">
+              <div className="max-w-lg space-y-4">
+                <div className="flex items-center gap-2 animate-fade-up" style={{ animationDelay: "0ms" }}>
+                  <Sparkles className="w-3.5 h-3.5 text-secondary" />
+                  <span className="text-[10px] font-bold text-secondary uppercase tracking-[0.2em]">AI Powered Transformation</span>
+                </div>
+                <h1
+                  className="text-2xl lg:text-3xl font-bold leading-[1.1] animate-fade-up"
+                  style={{ animationDelay: "80ms", animationFillMode: "backwards" }}
+                >
+                  Visualize Your Dream
+                  <br />
+                  Room <span className="text-transparent bg-clip-text gradient-primary bg-gradient-to-r from-[hsl(263,70%,58%)] to-[hsl(187,94%,43%)]">Instantly</span>
+                </h1>
+                <p
+                  className="text-sm text-white/60 max-w-xs leading-relaxed animate-fade-up"
+                  style={{ animationDelay: "160ms", animationFillMode: "backwards" }}
+                >
+                  Upload your room, choose your mood, and watch AI redesign it — before you spend a single rupee.
+                </p>
+                <div className="flex items-center gap-3 animate-fade-up" style={{ animationDelay: "240ms", animationFillMode: "backwards" }}>
+                  <div className="flex items-center gap-2 px-3.5 py-2 rounded-full glass-panel text-xs font-medium">
+                    <span className="w-1.5 h-1.5 rounded-full bg-success animate-pulse" />
+                    3,847 rooms transformed today
+                  </div>
+                </div>
               </div>
-              <h2 className="text-lg font-bold" style={{ lineHeight: 1.2 }}>Japandi Living Room</h2>
-              <p className="text-xs text-white/60 mt-1">Warm wood tones · Minimal furniture · Natural light</p>
             </div>
-            <div className="absolute top-4 right-4 glass-panel px-2.5 py-1 rounded-full flex items-center gap-1.5">
-              <Eye className="w-3 h-3 text-white/60" />
-              <span className="text-[10px] font-medium text-white/60">5.2k views</span>
+
+            {/* Mini before/after badge */}
+            <div className="absolute bottom-4 right-4 lg:right-8 glass-panel rounded-xl p-2 flex items-center gap-2 animate-fade-up" style={{ animationDelay: "300ms", animationFillMode: "backwards" }}>
+              <div className="w-16 h-12 rounded-lg overflow-hidden opacity-50">
+                <img src={heroRoom} alt="before" className="w-full h-full object-cover grayscale" />
+              </div>
+              <ArrowRight className="w-3.5 h-3.5 text-primary" />
+              <div className="w-16 h-12 rounded-lg overflow-hidden border border-primary/30">
+                <img src={roomLuxury} alt="after" className="w-full h-full object-cover" />
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Inspiration grid */}
-        <div className="mb-6">
-          <h3 className="text-sm font-medium text-muted-foreground mb-3 animate-fade-up" style={{ animationDelay: "100ms", animationFillMode: "backwards" }}>
-            Popular Styles
-          </h3>
-          <div className="grid grid-cols-3 gap-3">
-            {inspirationRooms.map((room, i) => (
+        {/* How it works — visual flow */}
+        <div className="px-5 lg:px-8 py-6">
+          <div className="grid grid-cols-3 gap-3 mb-8">
+            {[
+              { step: "01", title: "Upload", desc: "Snap your room", icon: "📸" },
+              { step: "02", title: "Customize", desc: "Mood + budget", icon: "🎨" },
+              { step: "03", title: "Transform", desc: "AI redesigns it", icon: "✨" },
+            ].map((item, i) => (
               <div
-                key={room.label}
-                className="relative rounded-xl overflow-hidden group cursor-pointer aspect-[4/3] animate-fade-up"
-                style={{ animationDelay: `${150 + i * 60}ms`, animationFillMode: "backwards" }}
+                key={item.step}
+                className="glass-card p-4 text-center group hover:border-white/15 transition-all duration-300 hover:scale-[1.02] animate-fade-up"
+                style={{ animationDelay: `${400 + i * 80}ms`, animationFillMode: "backwards" }}
               >
-                <img
-                  src={room.image}
-                  alt={room.label}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-3">
-                  <p className="text-xs font-semibold">{room.label}</p>
-                  <p className="text-[10px] text-white/50">{room.views} saves</p>
-                </div>
+                <span className="text-2xl block mb-2">{item.icon}</span>
+                <span className="text-[10px] text-primary font-bold tracking-wider">{item.step}</span>
+                <p className="text-xs font-semibold mt-1">{item.title}</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">{item.desc}</p>
               </div>
             ))}
           </div>
-        </div>
 
-        {/* Empty state prompt */}
-        <div className="text-center py-8 animate-fade-up" style={{ animationDelay: "350ms", animationFillMode: "backwards" }}>
-          <div className="w-16 h-16 mx-auto rounded-2xl glass-card flex items-center justify-center text-2xl mb-3">
-            🏠
+          {/* Inspiration gallery */}
+          <div>
+            <div className="flex items-center justify-between mb-3 animate-fade-up" style={{ animationDelay: "650ms", animationFillMode: "backwards" }}>
+              <h3 className="text-sm font-semibold">Popular Transformations</h3>
+              <span className="text-[10px] text-muted-foreground">Updated daily</span>
+            </div>
+            <div className="grid grid-cols-3 gap-3">
+              {inspirationRooms.map((room, i) => (
+                <div
+                  key={room.label}
+                  className="relative rounded-xl overflow-hidden group cursor-pointer aspect-[4/3] animate-fade-up"
+                  style={{ animationDelay: `${700 + i * 60}ms`, animationFillMode: "backwards" }}
+                >
+                  <img
+                    src={room.image}
+                    alt={room.label}
+                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-2.5">
+                    <p className="text-[11px] font-semibold">{room.label}</p>
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <Eye className="w-2.5 h-2.5 text-white/40" />
+                      <span className="text-[9px] text-white/40">{room.views}</span>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
-          <p className="text-sm font-medium">Upload a room to get started</p>
-          <p className="text-xs text-muted-foreground mt-1">Configure your mood, budget, and style on the left</p>
         </div>
       </div>
     );
@@ -104,16 +149,19 @@ export default function ResultPanel({ hasResult, config }: Props) {
 
   return (
     <div className="flex-1 p-5 lg:p-8 overflow-y-auto max-h-[calc(100vh-4rem)] relative">
-      {/* Background glow */}
-      <div className="absolute top-10 right-10 w-80 h-80 bg-primary/6 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-10 left-10 w-64 h-64 bg-secondary/5 rounded-full blur-[80px] pointer-events-none" />
+      <div className="absolute top-10 right-10 w-80 h-80 bg-primary/[0.04] rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-10 left-10 w-64 h-64 bg-secondary/[0.03] rounded-full blur-[80px] pointer-events-none" />
 
-      {/* Header */}
+      {/* Result header */}
       <div className="mb-6 animate-fade-up relative z-10">
-        <h1 className="text-2xl font-bold text-balance" style={{ lineHeight: 1.1 }}>
-          Your Room Transformation
+        <div className="flex items-center gap-2 mb-2">
+          <Sparkles className="w-3.5 h-3.5 text-primary" />
+          <span className="text-[10px] font-bold text-primary uppercase tracking-[0.15em]">Transformation Complete</span>
+        </div>
+        <h1 className="text-2xl font-bold" style={{ lineHeight: 1.1 }}>
+          Your Room, Reimagined
         </h1>
-        <p className="text-sm text-muted-foreground mt-2">AI-powered design based on your preferences</p>
+        <p className="text-sm text-muted-foreground mt-2">Here's what AI designed based on your preferences</p>
       </div>
 
       {/* Summary pills */}
@@ -151,7 +199,6 @@ export default function ResultPanel({ hasResult, config }: Props) {
         ))}
       </div>
 
-      {/* Tab content */}
       <div className="animate-fade-up relative z-10" style={{ animationDelay: "200ms", animationFillMode: "backwards" }}>
         {activeTab === 0 && <Preview3D />}
         {activeTab === 1 && <BeforeAfter />}
