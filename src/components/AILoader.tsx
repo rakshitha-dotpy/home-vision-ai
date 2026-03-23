@@ -17,30 +17,23 @@ export default function AILoader({ length, width, budget, mood, style, area }: P
   const steps = [
     {
       icon: <Camera className="w-8 h-8 text-primary" />,
-      text: "Scanning your room...",
-      subtext: `Analyzing ${length}ft × ${width}ft space`
+      text: "Analyzing your room...",
+      subtext: `Scanning ${area || length * width} sq ft space`
     },
     {
       icon: <Palette className="w-8 h-8 text-primary" />,
-      text: "Understanding your style...",
+      text: "Applying style...",
       subtext: `Applying ${mood} mood with ${style} aesthetics`
     },
     {
       icon: <Sparkles className="w-8 h-8 text-primary" />,
-      text: "Designing your dream space...",
+      text: "Almost done...",
       subtext: `Optimizing for ₹${budget.toLocaleString("en-IN")} budget`
-    },
-    {
-      icon: <CheckCircle2 className="w-8 h-8 text-primary" />,
-      text: "Almost ready...",
-      subtext: `Placing furniture in your ${area} sq ft room`
     }
   ];
 
   useEffect(() => {
-    // 5.5s total loading time
-    // 1.5s for each of the first 3 steps, 1s for the last
-    const totalTime = 5500;
+    const totalTime = 2500;
     const intervalTime = 50; 
     let elapsed = 0;
 
@@ -48,10 +41,9 @@ export default function AILoader({ length, width, budget, mood, style, area }: P
       elapsed += intervalTime;
       setProgress(Math.min(100, (elapsed / totalTime) * 100));
 
-      if (elapsed < 1500) setStep(0);
-      else if (elapsed < 3000) setStep(1);
-      else if (elapsed < 4500) setStep(2);
-      else setStep(3);
+      if (elapsed < 1000) setStep(0);
+      else if (elapsed < 2000) setStep(1);
+      else setStep(2);
 
       if (elapsed >= totalTime) clearInterval(interval);
     }, intervalTime);

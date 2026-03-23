@@ -93,29 +93,22 @@ export default function DesignResult({ hasResult, config, resultData, onReset }:
     toast.success("Link copied to clipboard!");
   };
 
-  const handleDownload = () => {
-    const text = `RoomGenie Design Report
-------------------------
-Style: ${config.style} | Mood: ${config.mood}
-
-Room Analysis:
-Area: ${resultData.roomAnalysis.area}
-Budget Efficiency: ${resultData.roomAnalysis.budgetPerSqFt}
-Tip: ${resultData.roomAnalysis.recommendation}
-
-Selected Items:
-${resultData.items.map(i => `- ${i.name} (${i.price}) from ${i.where}`).join("\\n")}
-    `;
-    const blob = new Blob([text], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "roomgenie-report.txt";
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    toast.success("Report downloaded!");
+  const handleDownload = async () => {
+    try {
+      const response = await fetch(resultData.generatedImage);
+      const blob = await response.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "roomgenie-redesign.jpg";
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      toast.success("Image downloaded successfully!");
+    } catch {
+      toast.error("Failed to download image");
+    }
   };
 
   return (
@@ -197,11 +190,16 @@ ${resultData.items.map(i => `- ${i.name} (${i.price}) from ${i.where}`).join("\\
             </div>
 
             {/* Labels */}
-            <div className="absolute top-4 left-4 bg-white/80 backdrop-blur text-foreground text-xs font-bold px-3 py-1.5 rounded-full shadow-sm border border-white/40">
-              Generated
+            <div className="absolute top-4 left-4 flex flex-col items-start gap-2">
+              <div className="bg-white/80 backdrop-blur text-foreground text-xs font-bold px-3 py-1.5 rounded-full shadow-sm border border-white/40">
+                AFTER
+              </div>
+              <div className="bg-[#C4622D] text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-sm">
+                ✦ Demo Result
+              </div>
             </div>
             <div className="absolute top-4 right-4 bg-black/60 backdrop-blur text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm border border-black/40">
-              Original
+              BEFORE
             </div>
 
             {showDragHint && (

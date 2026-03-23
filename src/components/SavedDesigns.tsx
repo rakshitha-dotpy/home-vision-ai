@@ -2,7 +2,9 @@ import { useState, useEffect } from "react";
 import { Trash2, ExternalLink, CalendarDays } from "lucide-react";
 import { toast } from "sonner";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export default function SavedDesigns({ onDesignSelect }: { onDesignSelect: (design: any) => void }) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [designs, setDesigns] = useState<any[]>([]);
 
   useEffect(() => {
@@ -27,28 +29,16 @@ export default function SavedDesigns({ onDesignSelect }: { onDesignSelect: (desi
   if (designs.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center animate-fade-in-up bg-slate-50">
-        <div className="w-48 h-48 mb-6 opacity-80">
-          <svg viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect x="40" y="60" width="120" height="90" rx="12" fill="#F5F0E8" stroke="#C4622D" strokeWidth="4" />
-            <path d="M40 90L160 90" stroke="#C4622D" strokeWidth="4" />
-            <circle cx="100" cy="120" r="15" fill="#C4622D" opacity="0.2" />
-            <path d="M85 120H115" stroke="#C4622D" strokeWidth="4" strokeLinecap="round" />
-            <path d="M100 105V135" stroke="#C4622D" strokeWidth="4" strokeLinecap="round" />
-            <path d="M150 40V60" stroke="#C4622D" strokeWidth="4" strokeLinecap="round" />
-            <path d="M50 40V60" stroke="#C4622D" strokeWidth="4" strokeLinecap="round" />
-            <path d="M70 20V40" stroke="#C4622D" strokeWidth="4" strokeLinecap="round" />
-            <path d="M130 20V40" stroke="#C4622D" strokeWidth="4" strokeLinecap="round" />
-          </svg>
-        </div>
+        <div className="text-6xl mb-6">🖼️</div>
         <h2 className="text-2xl font-bold tracking-tight text-foreground mb-2">No saved designs yet</h2>
         <p className="text-muted-foreground mb-8 max-w-sm">
-          Your creative journey starts here! Generate your first beautiful room design to see it saved in this gallery.
+          Transform a room to see your results here
         </p>
         <button 
           onClick={() => onDesignSelect(null)}
-          className="px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-all active:scale-95 shadow-md shadow-primary/20"
+          className="px-6 py-3 bg-primary text-primary-foreground font-semibold rounded-xl hover:bg-primary/90 transition-all active:scale-95 shadow-md shadow-primary/20"
         >
-          Design my room
+          Go to Studio
         </button>
       </div>
     );

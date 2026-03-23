@@ -1,30 +1,30 @@
 import { useState, useCallback } from "react";
 import { Upload, Camera, Check, ImageIcon } from "lucide-react";
+import { toast } from "sonner";
 
 import styleModern from "@/assets/style-modern.jpg";
 import styleMinimal from "@/assets/style-minimal.jpg";
 import styleJapandi from "@/assets/style-japandi.jpg";
 import styleBoho from "@/assets/style-boho.jpg";
-import styleClassic from "@/assets/style-classic.jpg";
+import roomLuxury from "@/assets/room-luxury.jpg";
+import roomCalm from "@/assets/room-calm.jpg";
 import DimensionInput from "./DimensionInput";
 
-type Mood = "calm" | "luxury" | "cozy" | "energy" | "bold" | "minimal";
+type Mood = "Calm" | "Cozy" | "Energetic";
 
 const moods: { id: Mood; label: string; emoji: string; desc: string; color: string }[] = [
-  { id: "calm", label: "Calm", emoji: "🌿", desc: "Soft tones, natural materials", color: "from-emerald-50 to-emerald-100" },
-  { id: "luxury", label: "Luxury", emoji: "✨", desc: "Rich textures, refined details", color: "from-amber-50 to-amber-100" },
-  { id: "cozy", label: "Cozy", emoji: "🛋️", desc: "Warm hues, layered comfort", color: "from-orange-50 to-orange-100" },
-  { id: "energy", label: "Energy", emoji: "⚡", desc: "Vibrant accents, bold contrast", color: "from-sky-50 to-sky-100" },
-  { id: "bold", label: "Bold", emoji: "🎯", desc: "Statement pieces, strong color", color: "from-rose-50 to-rose-100" },
-  { id: "minimal", label: "Minimal", emoji: "◻️", desc: "Less is more, open space", color: "from-slate-50 to-slate-100" },
+  { id: "Calm", label: "Calm", emoji: "🌿", desc: "Soft tones, natural materials", color: "from-emerald-50 to-emerald-100" },
+  { id: "Cozy", label: "Cozy", emoji: "🛋️", desc: "Warm hues, layered comfort", color: "from-orange-50 to-orange-100" },
+  { id: "Energetic", label: "Energetic", emoji: "⚡", desc: "Vibrant accents, bold contrast", color: "from-sky-50 to-sky-100" },
 ];
 
 const styles = [
   { id: "Modern", image: styleModern },
   { id: "Minimal", image: styleMinimal },
   { id: "Japandi", image: styleJapandi },
-  { id: "Boho", image: styleBoho },
-  { id: "Classic", image: styleClassic },
+  { id: "Luxury", image: roomLuxury },
+  { id: "Nordic", image: roomCalm },
+  { id: "Industrial", image: styleBoho },
 ];
 
 const steps = [
@@ -40,7 +40,7 @@ interface Props {
 }
 
 export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
-  const [mood, setMood] = useState<Mood>("calm");
+  const [mood, setMood] = useState<Mood>("Calm");
   const [budget, setBudget] = useState(25000);
   const [style, setStyle] = useState("Modern");
   const [image, setImage] = useState<string | null>(null);
@@ -51,10 +51,18 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
 
   const handleMood = useCallback((m: Mood) => {
     setMood(m);
-    document.body.className = `mood-${m}`;
+    document.body.className = `mood-${m.toLowerCase()}`;
   }, []);
 
   const handleFile = (file: File) => {
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("Image too large. Please use under 10MB.");
+      return;
+    }
+    if (!["image/jpeg", "image/png"].includes(file.type)) {
+      toast.error("Please upload a JPG or PNG image.");
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (e) => setImage(e.target?.result as string);
     reader.readAsDataURL(file);
@@ -129,11 +137,21 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
             <span className="text-xs text-foreground font-medium">Upload your room</span>
           </div>
           <div
-            onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
+            onDragOver={(e) => { 
+              e.preventDefault(); 
+              if (!isGenerating) setDragActive(true); 
+            }}
             onDragLeave={() => setDragActive(false)}
-            onDrop={handleDrop}
-            onClick={openFilePicker}
+            onDrop={(e) => {
+              if (isGenerating) return;
+              handleDrop(e);
+            }}
+            onClick={() => {
+              if (!isGenerating) openFilePicker();
+            }}
             className={`relative rounded-2xl border-2 border-dashed cursor-pointer transition-all duration-300 overflow-hidden bg-white/60 ${
+              isGenerating ? "opacity-50 cursor-not-allowed " : ""
+            }${
               dragActive ? "border-primary bg-primary/5 scale-[1.01]" : image ? "border-success/30" : "border-border hover:border-primary/40 hover:shadow-md hover:shadow-primary/5"
             } ${image ? "h-40" : "h-32"}`}
           >
@@ -228,7 +246,7 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
           </div>
 
           {/* Style cards with images */}
-          <div className="grid grid-cols-5 gap-1.5 mt-3">
+          <div className="grid grid-cols-3 gap-2 mt-3">
             {styles.map((s) => (
               <button
                 key={s.id}
@@ -267,7 +285,7 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
               ...dimensions,
               area: dimensions.length * dimensions.width 
             })}
-            disabled={isGenerating}
+            disabled={!image || !style || isGenerating}
             className="w-full py-4 rounded-2xl font-semibold text-sm bg-primary text-primary-foreground
               transition-all duration-200 active:scale-[0.97] hover:brightness-90 shadow-lg shadow-primary/20
               disabled:opacity-50 disabled:cursor-not-allowed"

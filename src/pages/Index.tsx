@@ -22,10 +22,11 @@ interface Config {
 }
 
 export default function Index() {
-  const [activeTab, setActiveTab] = useState("Home");
+  const [activeTab, setActiveTab] = useState("home");
   const [isGenerating, setIsGenerating] = useState(false);
   const [hasResult, setHasResult] = useState(false);
   const [config, setConfig] = useState<Config | null>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [resultData, setResultData] = useState<any>(null);
 
   const handleGenerate = useCallback(async (c: Config) => {
@@ -40,26 +41,26 @@ export default function Index() {
         setResultData(result);
         setHasResult(true);
       } else {
-        throw new Error(result.error || "API failed");
+        throw new Error((result as Record<string, unknown>).error as string || "API failed");
       }
     } catch (err) {
       console.error(err);
-      toast.error("Something went wrong. Please try again.");
+      toast.error("Transform failed. Please try again.");
     } finally {
       setIsGenerating(false);
     }
   }, []);
 
   const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-    if (tab === "Home") {
+    setActiveTab(tab.toLowerCase());
+    if (tab.toLowerCase() === "home" || tab.toLowerCase() === "studio") {
       setHasResult(false);
       setIsGenerating(false);
     }
   };
 
   const handleDemoMode = () => {
-    setActiveTab("Studio");
+    setActiveTab("studio");
     const demoConfig = {
       image: "https://images.unsplash.com/photo-1593696140826-c58b021acf8b?w=800",
       mood: "luxury",
@@ -80,7 +81,7 @@ export default function Index() {
 
       <Navbar activeTab={activeTab} onTabChange={handleTabChange} />
 
-      {activeTab === "Studio" ? (
+      {activeTab === "studio" ? (
         <div className="flex flex-1 flex-col lg:flex-row relative z-10 h-[calc(100vh-4rem)]">
           <DesignSidebar onGenerate={handleGenerate} isGenerating={isGenerating} />
           
@@ -114,25 +115,25 @@ export default function Index() {
             )}
           </div>
         </div>
-      ) : activeTab === "Explore" ? (
+      ) : activeTab === "explore" ? (
         <ExploreGallery onTryStyle={(style, mood) => {
           // Prepopulating would require hoisting DesignSidebar state, but for hackathon demo switching to tab is okay
-          setActiveTab("Studio");
+          setActiveTab("studio");
           toast.success(`Selected ${style} style. Please upload a photo to continue.`);
         }} />
-      ) : activeTab === "Saved" ? (
+      ) : activeTab === "saved" ? (
         <SavedDesigns onDesignSelect={(design) => {
           if (!design) {
-            setActiveTab("Studio");
+            setActiveTab("studio");
             return;
           }
           setConfig(design.config);
           setResultData(design.resultData);
           setHasResult(true);
-          setActiveTab("Studio");
+          setActiveTab("studio");
         }} />
       ) : (
-        <LandingPage onStartStudio={() => setActiveTab("Studio")} />
+        <LandingPage onStartStudio={() => setActiveTab("studio")} />
       )}
 
       {/* Floating Demo Mode Button */}

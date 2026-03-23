@@ -12,7 +12,7 @@ export default function Navbar({ activeTab, onTabChange }: Props) {
     <nav className="h-16 bg-white/60 backdrop-blur-md border-b border-border flex items-center justify-between px-6 relative z-50">
       <div
         className="flex items-center gap-2.5 cursor-pointer"
-        onClick={() => onTabChange("Home")}
+        onClick={() => onTabChange("home")}
       >
         <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
           <Sparkles className="w-4 h-4 text-primary-foreground" />
@@ -24,9 +24,9 @@ export default function Navbar({ activeTab, onTabChange }: Props) {
         {navItems.map((item) => (
           <button
             key={item}
-            onClick={() => onTabChange(item)}
+            onClick={() => onTabChange(item.toLowerCase())}
             className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-200 active:scale-[0.97] ${
-              activeTab === item
+              activeTab === item.toLowerCase()
                 ? "bg-primary/15 text-primary"
                 : "text-muted-foreground hover:text-foreground"
             }`}
@@ -37,7 +37,7 @@ export default function Navbar({ activeTab, onTabChange }: Props) {
       </div>
 
       <button
-        onClick={() => onTabChange("Studio")}
+        onClick={() => onTabChange("studio")}
         className="px-4 py-2 rounded-full text-sm font-medium bg-primary text-primary-foreground hover:opacity-90 transition-all active:scale-[0.97] shadow-sm"
       >
         Try Free

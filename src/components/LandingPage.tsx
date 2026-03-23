@@ -1,3 +1,4 @@
+import { useState, useRef } from "react";
 import { ArrowRight, Eye, Sparkles } from "lucide-react";
 
 import heroTransformation from "@/assets/hero-transformation.jpg";
@@ -19,6 +20,31 @@ const transformations = [
 ];
 
 export default function LandingPage({ onStartStudio }: Props) {
+  const [sliderPos, setSliderPos] = useState(50);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    setIsDragging(true);
+    updateSlider(e.clientX);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent) => {
+    if (!isDragging) return;
+    updateSlider(e.clientX);
+  };
+
+  const handlePointerUp = () => {
+    setIsDragging(false);
+  };
+
+  const updateSlider = (clientX: number) => {
+    if (!sliderRef.current) return;
+    const rect = sliderRef.current.getBoundingClientRect();
+    const x = Math.max(0, Math.min(clientX - rect.left, rect.width));
+    setSliderPos((x / rect.width) * 100);
+  };
+
   return (
     <div className="flex-1 overflow-y-auto relative">
       {/* HERO */}
@@ -63,25 +89,52 @@ export default function LandingPage({ onStartStudio }: Props) {
               </button>
             </div>
 
-            {/* Right — hero image */}
+            {/* Right — hero slider */}
             <div
-              className="relative rounded-3xl overflow-hidden shadow-2xl shadow-foreground/10 animate-fade-up group"
-              style={{ animationDelay: "120ms", animationFillMode: "backwards" }}
+              className="relative rounded-3xl overflow-hidden shadow-2xl shadow-foreground/10 animate-fade-up group touch-none min-h-[300px] lg:min-h-[450px]"
+              style={{ animationDelay: "120ms", animationFillMode: "backwards", cursor: "ew-resize" }}
+              ref={sliderRef}
+              onPointerDown={handlePointerDown}
+              onPointerMove={handlePointerMove}
+              onPointerUp={handlePointerUp}
+              onPointerLeave={handlePointerUp}
             >
-              <img
-                src={heroTransformation}
-                alt="Room transformation before and after"
-                className="w-full h-auto object-cover transition-transform duration-700 group-hover:scale-[1.02]"
-              />
-              {/* Before/After badge */}
-              <div className="absolute bottom-4 left-4 flex items-center gap-2 bg-white/80 backdrop-blur-md border border-border rounded-xl px-3 py-2 shadow-md">
-                <div className="w-14 h-10 rounded-lg overflow-hidden opacity-60">
-                  <img src={heroRoom} alt="before" className="w-full h-full object-cover grayscale" />
+              {/* Original Image (Before) */}
+              <div className="absolute inset-0">
+                <img src={heroRoom} alt="Before" className="w-full h-full object-cover" draggable={false} />
+              </div>
+              
+              {/* Generated Image (After) */}
+              <div 
+                className="absolute inset-0 right-auto bg-muted overflow-hidden"
+                style={{ width: `${sliderPos}%` }}
+              >
+                <img 
+                  src={roomLuxury} 
+                  alt="After" 
+                  className="absolute inset-0 h-full max-w-none object-cover" 
+                  style={{ width: sliderRef.current ? sliderRef.current.offsetWidth : '100vw' }}
+                  draggable={false} 
+                />
+              </div>
+
+              {/* Drag Handle */}
+              <div 
+                className="absolute inset-y-0 flex items-center justify-center translate-x-[-50%]"
+                style={{ left: `${sliderPos}%` }}
+              >
+                <div className="h-full w-1 bg-white shadow-[0_0_10px_rgba(0,0,0,0.3)]"></div>
+                <div className="absolute w-10 h-10 bg-white rounded-full shadow-lg border border-border flex items-center justify-center transition-transform group-hover:scale-110 active:scale-95 text-primary">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18 6-6-6-6"/><path d="m9 18-6-6 6-6"/></svg>
                 </div>
-                <ArrowRight className="w-4 h-4 text-primary" />
-                <div className="w-14 h-10 rounded-lg overflow-hidden border-2 border-primary/40">
-                  <img src={roomLuxury} alt="after" className="w-full h-full object-cover" />
-                </div>
+              </div>
+
+              {/* Before/After Floating Labels */}
+              <div className="absolute top-4 left-4 bg-white/80 backdrop-blur text-foreground text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+                AFTER
+              </div>
+              <div className="absolute top-4 right-4 bg-black/60 backdrop-blur text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-sm">
+                BEFORE
               </div>
             </div>
           </div>
