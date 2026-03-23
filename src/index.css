@@ -4,47 +4,47 @@
 
 @layer base {
   :root {
-    --background: 228 20% 4%;
-    --foreground: 0 0% 100%;
+    --background: 30 25% 96%;
+    --foreground: 25 20% 15%;
 
-    --card: 228 15% 7%;
-    --card-foreground: 0 0% 100%;
+    --card: 0 0% 100%;
+    --card-foreground: 25 20% 15%;
 
-    --popover: 228 15% 7%;
-    --popover-foreground: 0 0% 100%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 25 20% 15%;
 
-    --primary: 263 70% 58%;
+    --primary: 25 55% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 187 94% 43%;
+    --secondary: 150 30% 40%;
     --secondary-foreground: 0 0% 100%;
 
-    --muted: 228 15% 12%;
-    --muted-foreground: 220 9% 60%;
+    --muted: 30 15% 90%;
+    --muted-foreground: 25 10% 45%;
 
-    --accent: 228 15% 10%;
-    --accent-foreground: 0 0% 100%;
+    --accent: 30 20% 93%;
+    --accent-foreground: 25 20% 15%;
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --success: 160 84% 39%;
+    --success: 150 45% 38%;
     --success-foreground: 0 0% 100%;
 
-    --border: 0 0% 100% / 0.08;
-    --input: 0 0% 100% / 0.08;
-    --ring: 263 70% 58%;
+    --border: 30 15% 85%;
+    --input: 30 15% 85%;
+    --ring: 25 55% 45%;
 
     --radius: 0.75rem;
 
-    --sidebar-background: 228 15% 5%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 263 70% 58%;
+    --sidebar-background: 30 20% 97%;
+    --sidebar-foreground: 25 20% 15%;
+    --sidebar-primary: 25 55% 45%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 228 15% 10%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 0 0% 100% / 0.06;
-    --sidebar-ring: 263 70% 58%;
+    --sidebar-accent: 30 20% 93%;
+    --sidebar-accent-foreground: 25 20% 15%;
+    --sidebar-border: 30 15% 88%;
+    --sidebar-ring: 25 55% 45%;
   }
 }
 
@@ -61,19 +61,19 @@
 
 @layer components {
   .glass-panel {
-    @apply bg-white/[0.04] border border-white/[0.08] backdrop-blur-md;
+    @apply bg-white/70 border border-[hsl(30,15%,85%)] backdrop-blur-md;
   }
 
   .glass-card {
-    @apply glass-panel rounded-2xl;
+    @apply glass-panel rounded-2xl shadow-sm;
   }
 
   .glow-primary {
-    box-shadow: 0 0 20px hsl(263 70% 58% / 0.3), 0 0 60px hsl(263 70% 58% / 0.1);
+    box-shadow: 0 0 20px hsl(25 55% 45% / 0.2), 0 0 60px hsl(25 55% 45% / 0.08);
   }
 
   .glow-secondary {
-    box-shadow: 0 0 20px hsl(187 94% 43% / 0.3), 0 0 60px hsl(187 94% 43% / 0.1);
+    box-shadow: 0 0 20px hsl(150 30% 40% / 0.2), 0 0 60px hsl(150 30% 40% / 0.08);
   }
 
   .gradient-primary {
@@ -81,19 +81,42 @@
   }
 
   .mood-calm {
-    background: linear-gradient(135deg, hsl(228 20% 4%) 0%, hsl(160 30% 8%) 50%, hsl(170 25% 5%) 100%);
+    background: linear-gradient(135deg, hsl(30 25% 96%) 0%, hsl(150 20% 93%) 50%, hsl(160 15% 95%) 100%);
   }
 
   .mood-luxury {
-    background: linear-gradient(135deg, hsl(228 20% 4%) 0%, hsl(270 30% 10%) 50%, hsl(280 25% 6%) 100%);
+    background: linear-gradient(135deg, hsl(30 25% 96%) 0%, hsl(280 15% 93%) 50%, hsl(270 12% 95%) 100%);
   }
 
   .mood-cozy {
-    background: linear-gradient(135deg, hsl(228 20% 4%) 0%, hsl(30 30% 8%) 50%, hsl(25 25% 5%) 100%);
+    background: linear-gradient(135deg, hsl(30 25% 96%) 0%, hsl(25 30% 92%) 50%, hsl(20 25% 94%) 100%);
   }
 
   .mood-energy {
-    background: linear-gradient(135deg, hsl(228 20% 4%) 0%, hsl(340 30% 8%) 50%, hsl(350 25% 5%) 100%);
+    background: linear-gradient(135deg, hsl(30 25% 96%) 0%, hsl(10 25% 93%) 50%, hsl(350 20% 95%) 100%);
+  }
+
+  /* Ambient light effects */
+  .sunlight-glow {
+    position: fixed;
+    top: -10%;
+    left: -5%;
+    width: 50%;
+    height: 60%;
+    background: radial-gradient(ellipse, hsl(45 80% 85% / 0.35) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .lamp-glow {
+    position: fixed;
+    bottom: 5%;
+    right: 10%;
+    width: 30%;
+    height: 40%;
+    background: radial-gradient(ellipse, hsl(30 60% 80% / 0.2) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
   }
 }
 

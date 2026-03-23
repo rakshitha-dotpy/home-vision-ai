@@ -3,11 +3,11 @@ import { Upload, Camera, Check } from "lucide-react";
 
 type Mood = "calm" | "luxury" | "cozy" | "energy";
 
-const moods: { id: Mood; label: string; emoji: string }[] = [
-  { id: "calm", label: "Calm", emoji: "🌿" },
-  { id: "luxury", label: "Luxury", emoji: "✨" },
-  { id: "cozy", label: "Cozy", emoji: "🛋️" },
-  { id: "energy", label: "Energy", emoji: "⚡" },
+const moods: { id: Mood; label: string; emoji: string; color: string }[] = [
+  { id: "calm", label: "Calm", emoji: "🌿", color: "from-emerald-100 to-emerald-200" },
+  { id: "luxury", label: "Luxury", emoji: "✨", color: "from-amber-100 to-amber-200" },
+  { id: "cozy", label: "Cozy", emoji: "🛋️", color: "from-orange-100 to-orange-200" },
+  { id: "energy", label: "Energy", emoji: "⚡", color: "from-sky-100 to-sky-200" },
 ];
 
 const styles = ["Modern", "Minimal", "Japandi", "Boho", "Classic"];
@@ -53,7 +53,7 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
   const formatBudget = (v: number) => `₹${v.toLocaleString("en-IN")}`;
 
   return (
-    <aside className="w-full lg:w-[340px] shrink-0 glass-panel border-t-0 border-l-0 border-b-0 overflow-y-auto max-h-[calc(100vh-4rem)]">
+    <aside className="w-full lg:w-[340px] shrink-0 bg-white/50 backdrop-blur-md border-r border-border overflow-y-auto max-h-[calc(100vh-4rem)]">
       {/* Step progress */}
       <div className="px-5 pt-5 pb-3">
         <div className="flex items-center gap-1">
@@ -66,13 +66,13 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
                       ? "bg-success/20 text-success"
                       : s.num === currentStep
                       ? "gradient-primary text-primary-foreground glow-primary"
-                      : "bg-white/5 text-muted-foreground"
+                      : "bg-muted text-muted-foreground"
                   }`}
                 >
                   {s.num < currentStep ? <Check className="w-3 h-3" /> : s.num}
                 </div>
                 {i < steps.length - 1 && (
-                  <div className={`h-px flex-1 transition-colors duration-500 ${s.num < currentStep ? "bg-success/30" : "bg-white/5"}`} />
+                  <div className={`h-px flex-1 transition-colors duration-500 ${s.num < currentStep ? "bg-success/30" : "bg-border"}`} />
                 )}
               </div>
             </div>
@@ -91,8 +91,8 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
         {/* Step 1: Upload */}
         <section>
           <div className="flex items-center gap-2 mb-2.5">
-            <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Step 1</span>
-            <span className="text-xs text-muted-foreground">Upload your room</span>
+            <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Step 1:</span>
+            <span className="text-xs text-foreground font-medium">Upload your room</span>
           </div>
           <div
             onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
@@ -108,15 +108,15 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
               };
               input.click();
             }}
-            className={`relative rounded-2xl border-2 border-dashed cursor-pointer transition-all duration-300 overflow-hidden ${
-              dragActive ? "border-primary bg-primary/5 scale-[1.01]" : image ? "border-success/30" : "border-white/10 hover:border-white/20"
+            className={`relative rounded-2xl border-2 border-dashed cursor-pointer transition-all duration-300 overflow-hidden bg-white/60 ${
+              dragActive ? "border-primary bg-primary/5 scale-[1.01]" : image ? "border-success/30" : "border-border hover:border-primary/40"
             } ${image ? "h-36" : "h-28"}`}
           >
             {image ? (
               <>
                 <img src={image} alt="Room preview" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <Camera className="w-5 h-5" />
+                <div className="absolute inset-0 bg-foreground/20 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <Camera className="w-5 h-5 text-white" />
                 </div>
                 <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-success/20 flex items-center justify-center">
                   <Check className="w-3 h-3 text-success" />
@@ -124,10 +124,10 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
               </>
             ) : (
               <div className="flex flex-col items-center justify-center h-full gap-2 text-muted-foreground">
-                <div className="w-10 h-10 rounded-xl glass-card flex items-center justify-center">
-                  <Upload className="w-5 h-5" />
+                <div className="w-10 h-10 rounded-xl bg-white shadow-sm border border-border flex items-center justify-center">
+                  <Upload className="w-5 h-5 text-primary" />
                 </div>
-                <span className="text-[11px]">Drop a photo of your room</span>
+                <span className="text-[11px] text-foreground/60">Drop a photo of your room</span>
               </div>
             )}
           </div>
@@ -136,22 +136,22 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
         {/* Step 2: Mood */}
         <section>
           <div className="flex items-center gap-2 mb-2.5">
-            <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Step 2</span>
-            <span className="text-xs text-muted-foreground">How should it feel?</span>
+            <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Step 2:</span>
+            <span className="text-xs text-foreground font-medium">How should it feel?</span>
           </div>
           <div className="grid grid-cols-4 gap-2">
             {moods.map((m) => (
               <button
                 key={m.id}
                 onClick={() => handleMood(m.id)}
-                className={`glass-card py-2.5 px-1 text-center transition-all duration-300 active:scale-[0.94] ${
+                className={`rounded-2xl py-3 px-1 text-center transition-all duration-300 active:scale-[0.94] bg-gradient-to-br ${m.color} border ${
                   mood === m.id
-                    ? "border-primary/60 glow-primary bg-primary/5"
-                    : "hover:border-white/15 hover:bg-white/[0.06]"
+                    ? "border-primary shadow-md ring-2 ring-primary/20"
+                    : "border-transparent hover:shadow-sm"
                 }`}
               >
                 <span className="text-lg block">{m.emoji}</span>
-                <span className="text-[10px] font-medium mt-0.5 block">{m.label}</span>
+                <span className="text-[10px] font-semibold mt-0.5 block text-foreground/80">{m.label}</span>
               </button>
             ))}
           </div>
@@ -160,11 +160,11 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
         {/* Step 3: Budget + Style */}
         <section>
           <div className="flex items-center gap-2 mb-2.5">
-            <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Step 3</span>
-            <span className="text-xs text-muted-foreground">Budget & style</span>
+            <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Step 3:</span>
+            <span className="text-xs text-foreground font-medium">Budget & style</span>
           </div>
 
-          <div className="glass-card p-3.5 space-y-3">
+          <div className="bg-white rounded-2xl border border-border p-3.5 space-y-3 shadow-sm">
             <div className="flex justify-between items-center">
               <span className="text-xs text-muted-foreground">Budget</span>
               <span className="text-sm font-bold text-success">{formatBudget(budget)}</span>
@@ -176,9 +176,9 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
               step={1000}
               value={budget}
               onChange={(e) => setBudget(Number(e.target.value))}
-              className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-white/10
+              className="w-full h-1.5 rounded-full appearance-none cursor-pointer bg-muted
                 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4
-                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-success [&::-webkit-slider-thumb]:shadow-lg
+                [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary [&::-webkit-slider-thumb]:shadow-lg
                 [&::-webkit-slider-thumb]:transition-transform [&::-webkit-slider-thumb]:active:scale-110"
             />
             <div className="flex justify-between text-[9px] text-muted-foreground">
@@ -194,8 +194,8 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
                 onClick={() => setStyle(s)}
                 className={`px-3 py-1.5 rounded-full text-[11px] font-medium transition-all duration-200 active:scale-[0.95] ${
                   style === s
-                    ? "bg-primary/20 text-primary border border-primary/40"
-                    : "glass-panel hover:bg-white/[0.06]"
+                    ? "bg-primary/15 text-primary border border-primary/30"
+                    : "bg-white border border-border hover:border-primary/30 text-muted-foreground"
                 }`}
               >
                 {s}
@@ -207,8 +207,8 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
         {/* Step 4: Generate */}
         <section>
           <div className="flex items-center gap-2 mb-2.5">
-            <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Step 4</span>
-            <span className="text-xs text-muted-foreground">See the magic</span>
+            <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Step 4:</span>
+            <span className="text-xs text-foreground font-medium">See the magic</span>
           </div>
           <button
             onClick={() => onGenerate({ mood, budget, style, image })}

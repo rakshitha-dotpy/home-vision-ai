@@ -27,7 +27,7 @@ export default function AIReasoning({ mood, style, budget }: Props) {
   }, [fullText]);
 
   return (
-    <div className="glass-card p-5 space-y-3">
+    <div className="bg-white border border-border rounded-2xl p-5 space-y-3 shadow-sm">
       <div className="flex items-center gap-2">
         <Brain className="w-4 h-4 text-primary" />
         <span className="text-xs font-semibold text-primary uppercase tracking-wider">AI Design Reasoning</span>
