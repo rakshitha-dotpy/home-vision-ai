@@ -18,10 +18,10 @@ export default function StyleDNA({ config }: Props) {
 
   return (
     <div className="flex justify-center">
-      <div className="glass-card p-8 max-w-sm w-full text-center space-y-5">
+      <div className="bg-white border border-border rounded-2xl p-8 max-w-sm w-full text-center space-y-5 shadow-sm">
         <div>
           <p className="text-xs text-muted-foreground uppercase tracking-widest mb-2">Your Design Personality</p>
-          <h2 className="text-2xl font-bold" style={{ lineHeight: 1.1 }}>{personality}</h2>
+          <h2 className="text-2xl font-bold text-foreground" style={{ lineHeight: 1.1 }}>{personality}</h2>
           <p className="text-sm text-muted-foreground mt-2 italic">"{tagline}"</p>
         </div>
 
@@ -29,7 +29,7 @@ export default function StyleDNA({ config }: Props) {
           {palette.map((c) => (
             <div
               key={c}
-              className="w-7 h-7 rounded-full border border-white/10 transition-transform duration-200 hover:scale-110"
+              className="w-7 h-7 rounded-full border border-border transition-transform duration-200 hover:scale-110"
               style={{ backgroundColor: c }}
             />
           ))}
@@ -37,7 +37,7 @@ export default function StyleDNA({ config }: Props) {
 
         <div className="flex flex-wrap justify-center gap-2">
           {tags.map((t) => (
-            <span key={t} className="px-3 py-1 rounded-full text-[11px] glass-panel text-muted-foreground">
+            <span key={t} className="px-3 py-1 rounded-full text-[11px] bg-accent border border-border text-muted-foreground">
               {t}
             </span>
           ))}

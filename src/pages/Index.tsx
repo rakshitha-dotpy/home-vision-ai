@@ -27,9 +27,13 @@ export default function Index() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col relative">
+      {/* Ambient light effects */}
+      <div className="sunlight-glow" />
+      <div className="lamp-glow" />
+
       <Navbar />
-      <div className="flex flex-1 flex-col lg:flex-row">
+      <div className="flex flex-1 flex-col lg:flex-row relative z-10">
         <DesignSidebar onGenerate={handleGenerate} isGenerating={isGenerating} />
         {isGenerating ? (
           <LoadingOverlay />

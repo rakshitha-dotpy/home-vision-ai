@@ -58,18 +58,17 @@ export default function Suggestions({ config }: Props) {
         {suggestions.map((s, i) => (
           <div
             key={s.name}
-            className="glass-card overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:border-white/15 hover:shadow-lg hover:shadow-primary/5 group"
+            className="bg-white border border-border rounded-2xl overflow-hidden transition-all duration-300 hover:scale-[1.02] hover:shadow-md hover:border-primary/20 group shadow-sm"
             style={{ animationDelay: `${i * 80}ms` }}
           >
-            {/* Room image */}
             <div className="relative h-36 overflow-hidden">
               <img
                 src={s.image}
                 alt={s.name}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#08090f] via-transparent to-transparent" />
-              <span className="absolute top-2.5 left-2.5 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-black/40 backdrop-blur-sm text-white/80">
+              <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
+              <span className="absolute top-2.5 left-2.5 text-[10px] font-semibold px-2 py-0.5 rounded-full bg-white/80 backdrop-blur-sm text-foreground border border-border">
                 {s.name}
               </span>
             </div>
@@ -77,26 +76,24 @@ export default function Suggestions({ config }: Props) {
             <div className="p-4 space-y-3">
               <p className="text-xs text-muted-foreground leading-relaxed">{s.desc}</p>
 
-              {/* Color palette */}
               <div className="flex gap-1.5">
                 {s.colors.map((c) => (
                   <div
                     key={c}
-                    className="w-5 h-5 rounded-full border border-white/10 transition-transform duration-200 hover:scale-125"
+                    className="w-5 h-5 rounded-full border border-border transition-transform duration-200 hover:scale-125"
                     style={{ backgroundColor: c }}
                   />
                 ))}
               </div>
 
-              {/* Furniture items with images */}
               <div className="grid grid-cols-2 gap-2 pt-1">
                 {s.items.map((item) => (
-                  <div key={item.name} className="glass-panel rounded-lg p-1.5 flex items-center gap-2 group/item hover:bg-white/[0.06] transition-colors">
+                  <div key={item.name} className="bg-accent rounded-lg p-1.5 flex items-center gap-2 group/item hover:bg-muted transition-colors">
                     <div className="w-9 h-9 rounded-md overflow-hidden shrink-0">
                       <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
                     </div>
                     <div className="min-w-0">
-                      <p className="text-[10px] truncate">{item.name}</p>
+                      <p className="text-[10px] truncate text-foreground">{item.name}</p>
                       <p className="text-[10px] text-success font-medium">{item.price}</p>
                     </div>
                   </div>
