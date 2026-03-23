@@ -1,3 +1,4 @@
+'use strict';
 const express = require('express');
 const cors = require('cors');
 const multer = require('multer');
@@ -6,11 +7,14 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3001;
-
-// Middleware
 app.use(cors());
 app.use(express.json());
+
+app.get('/', (req, res) => {
+  res.json({ status: "RoomGenie API running" })
+});
+
+// Middleware
 
 // Setup multer for multipart/form-data
 const storage = multer.memoryStorage();
@@ -106,6 +110,7 @@ app.post('/api/generate-design', upload.single('image'), (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Backend server running on http://localhost:${port}`);
-});
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => {
+  console.log('Server running on port ' + PORT)
+})

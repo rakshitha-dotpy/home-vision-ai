@@ -30,10 +30,6 @@ export default function Index() {
 
   const handleGenerate = useCallback(async (c: Config) => {
     setConfig(c);
-    if (!c.image) {
-      toast.error("Please upload a room photo first!");
-      return;
-    }
     
     setIsGenerating(true);
     setHasResult(false);
@@ -44,11 +40,11 @@ export default function Index() {
         setResultData(result);
         setHasResult(true);
       } else {
-        throw new Error(result.error || "Unknown error occurred");
+        throw new Error(result.error || "API failed");
       }
     } catch (err) {
       console.error(err);
-      toast.error("Failed to generate design");
+      toast.error("Something went wrong. Please try again.");
     } finally {
       setIsGenerating(false);
     }

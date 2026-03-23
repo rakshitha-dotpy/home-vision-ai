@@ -1,3 +1,5 @@
+const API_URL = 'https://home-vision-ai.onrender.com/api/generate-design';
+
 export async function generateDesign(data: {
   image: string | null;
   mood: string;
@@ -26,19 +28,22 @@ export async function generateDesign(data: {
     formData.append('height', data.height.toString());
 
     // Call our Node API
-    const res = await fetch('http://localhost:3001/api/generate-design', {
+    const response = await fetch(API_URL, {
       method: 'POST',
-      body: formData
+      body: formData,
     });
-
-    if (!res.ok) {
-      throw new Error("Failed to connect to API");
+    
+    if (!response.ok) {
+      throw new Error('Server error: ' + response.status);
     }
-
-    const json = await res.json();
-    return json;
-  } catch (error) {
-    console.error("API Error:", error);
+    
+    const responseData = await response.json();
+    return responseData;
+    
+  } catch (error: any) {
+    if (error.message && error.message.includes('fetch')) {
+      throw new Error('Cannot reach server. Please try again.');
+    }
     throw error;
   }
 }
