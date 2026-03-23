@@ -1,30 +1,27 @@
 import { useState, useEffect } from "react";
+import { Progress } from "@/components/ui/progress";
 
 const phases = [
-  { text: "Analyzing your room...", emoji: "🔍", duration: 1200 },
-  { text: "Understanding your mood...", emoji: "🎨", duration: 1200 },
-  { text: "Designing your perfect space...", emoji: "✨", duration: 1200 },
+  { text: "Analyzing your room...", emoji: "🔍", pct: 30 },
+  { text: "Applying your style...", emoji: "🎨", pct: 65 },
+  { text: "Almost ready...", emoji: "✨", pct: 95 },
 ];
 
 export default function LoadingOverlay() {
   const [phase, setPhase] = useState(0);
 
   useEffect(() => {
-    const timers = phases.map((_, i) =>
-      setTimeout(() => setPhase(i), i * phases[i].duration)
-    );
-    return () => timers.forEach(clearTimeout);
+    const t1 = setTimeout(() => setPhase(1), 900);
+    const t2 = setTimeout(() => setPhase(2), 1800);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   return (
     <div className="flex-1 flex items-center justify-center p-8 relative">
-      <div className="absolute w-64 h-64 bg-primary/8 rounded-full blur-[100px] animate-pulse-glow" />
-      <div className="absolute w-48 h-48 bg-secondary/6 rounded-full blur-[80px] animate-pulse-glow" style={{ animationDelay: "500ms" }} />
-
-      <div className="text-center space-y-8 relative z-10">
-        <div className="relative w-24 h-24 mx-auto">
-          <div className="absolute inset-0 rounded-2xl gradient-primary opacity-10 animate-ping" style={{ animationDuration: "2s" }} />
-          <div className="relative w-24 h-24 rounded-2xl gradient-primary flex items-center justify-center text-3xl shadow-lg">
+      <div className="text-center space-y-8 relative z-10 max-w-xs w-full">
+        <div className="relative w-20 h-20 mx-auto">
+          <div className="absolute inset-0 rounded-2xl bg-primary opacity-10 animate-ping" style={{ animationDuration: "2s" }} />
+          <div className="relative w-20 h-20 rounded-2xl bg-primary flex items-center justify-center text-3xl shadow-lg">
             {phases[phase].emoji}
           </div>
         </div>
@@ -45,14 +42,8 @@ export default function LoadingOverlay() {
           ))}
         </div>
 
-        <div className="flex gap-1 justify-center">
-          {[0, 1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-glow"
-              style={{ animationDelay: `${i * 200}ms` }}
-            />
-          ))}
+        <div className="px-4">
+          <Progress value={phases[phase].pct} className="h-1.5 bg-muted" />
         </div>
       </div>
     </div>

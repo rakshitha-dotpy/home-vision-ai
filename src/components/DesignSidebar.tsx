@@ -1,21 +1,35 @@
 import { useState, useCallback } from "react";
-import { Upload, Camera, Check } from "lucide-react";
+import { Upload, Camera, Check, ImageIcon } from "lucide-react";
 
-type Mood = "calm" | "luxury" | "cozy" | "energy";
+import styleModern from "@/assets/style-modern.jpg";
+import styleMinimal from "@/assets/style-minimal.jpg";
+import styleJapandi from "@/assets/style-japandi.jpg";
+import styleBoho from "@/assets/style-boho.jpg";
+import styleClassic from "@/assets/style-classic.jpg";
 
-const moods: { id: Mood; label: string; emoji: string; color: string }[] = [
-  { id: "calm", label: "Calm", emoji: "🌿", color: "from-emerald-100 to-emerald-200" },
-  { id: "luxury", label: "Luxury", emoji: "✨", color: "from-amber-100 to-amber-200" },
-  { id: "cozy", label: "Cozy", emoji: "🛋️", color: "from-orange-100 to-orange-200" },
-  { id: "energy", label: "Energy", emoji: "⚡", color: "from-sky-100 to-sky-200" },
+type Mood = "calm" | "luxury" | "cozy" | "energy" | "bold" | "minimal";
+
+const moods: { id: Mood; label: string; emoji: string; desc: string; color: string }[] = [
+  { id: "calm", label: "Calm", emoji: "🌿", desc: "Soft tones, natural materials", color: "from-emerald-50 to-emerald-100" },
+  { id: "luxury", label: "Luxury", emoji: "✨", desc: "Rich textures, refined details", color: "from-amber-50 to-amber-100" },
+  { id: "cozy", label: "Cozy", emoji: "🛋️", desc: "Warm hues, layered comfort", color: "from-orange-50 to-orange-100" },
+  { id: "energy", label: "Energy", emoji: "⚡", desc: "Vibrant accents, bold contrast", color: "from-sky-50 to-sky-100" },
+  { id: "bold", label: "Bold", emoji: "🎯", desc: "Statement pieces, strong color", color: "from-rose-50 to-rose-100" },
+  { id: "minimal", label: "Minimal", emoji: "◻️", desc: "Less is more, open space", color: "from-slate-50 to-slate-100" },
 ];
 
-const styles = ["Modern", "Minimal", "Japandi", "Boho", "Classic"];
+const styles = [
+  { id: "Modern", image: styleModern },
+  { id: "Minimal", image: styleMinimal },
+  { id: "Japandi", image: styleJapandi },
+  { id: "Boho", image: styleBoho },
+  { id: "Classic", image: styleClassic },
+];
 
 const steps = [
-  { num: 1, label: "Upload Room" },
-  { num: 2, label: "Choose Mood" },
-  { num: 3, label: "Set Budget" },
+  { num: 1, label: "Upload" },
+  { num: 2, label: "Mood" },
+  { num: 3, label: "Budget" },
   { num: 4, label: "Generate" },
 ];
 
@@ -50,10 +64,21 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
     if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
   };
 
+  const openFilePicker = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = "image/*";
+    input.onchange = (e) => {
+      const f = (e.target as HTMLInputElement).files?.[0];
+      if (f) handleFile(f);
+    };
+    input.click();
+  };
+
   const formatBudget = (v: number) => `₹${v.toLocaleString("en-IN")}`;
 
   return (
-    <aside className="w-full lg:w-[340px] shrink-0 bg-white/50 backdrop-blur-md border-r border-border overflow-y-auto max-h-[calc(100vh-4rem)]">
+    <aside className="w-full lg:w-[360px] shrink-0 bg-white/50 backdrop-blur-md border-r border-border overflow-y-auto max-h-[calc(100vh-4rem)]">
       {/* Step progress */}
       <div className="px-5 pt-5 pb-3">
         <div className="flex items-center gap-1">
@@ -65,7 +90,7 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
                     s.num < currentStep
                       ? "bg-success/20 text-success"
                       : s.num === currentStep
-                      ? "gradient-primary text-primary-foreground glow-primary"
+                      ? "bg-primary text-primary-foreground shadow-md shadow-primary/30"
                       : "bg-muted text-muted-foreground"
                   }`}
                 >
@@ -98,19 +123,10 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
             onDragOver={(e) => { e.preventDefault(); setDragActive(true); }}
             onDragLeave={() => setDragActive(false)}
             onDrop={handleDrop}
-            onClick={() => {
-              const input = document.createElement("input");
-              input.type = "file";
-              input.accept = "image/*";
-              input.onchange = (e) => {
-                const f = (e.target as HTMLInputElement).files?.[0];
-                if (f) handleFile(f);
-              };
-              input.click();
-            }}
+            onClick={openFilePicker}
             className={`relative rounded-2xl border-2 border-dashed cursor-pointer transition-all duration-300 overflow-hidden bg-white/60 ${
-              dragActive ? "border-primary bg-primary/5 scale-[1.01]" : image ? "border-success/30" : "border-border hover:border-primary/40"
-            } ${image ? "h-36" : "h-28"}`}
+              dragActive ? "border-primary bg-primary/5 scale-[1.01]" : image ? "border-success/30" : "border-border hover:border-primary/40 hover:shadow-md hover:shadow-primary/5"
+            } ${image ? "h-40" : "h-32"}`}
           >
             {image ? (
               <>
@@ -123,11 +139,17 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
                 </div>
               </>
             ) : (
-              <div className="flex flex-col items-center justify-center h-full gap-2 text-muted-foreground">
-                <div className="w-10 h-10 rounded-xl bg-white shadow-sm border border-border flex items-center justify-center">
-                  <Upload className="w-5 h-5 text-primary" />
+              <div className="flex flex-col items-center justify-center h-full gap-2 text-muted-foreground relative">
+                {/* Ghost placeholder */}
+                <div className="absolute inset-3 rounded-xl bg-accent/50 flex items-center justify-center">
+                  <ImageIcon className="w-12 h-12 text-muted-foreground/20" />
                 </div>
-                <span className="text-[11px] text-foreground/60">Drop a photo of your room</span>
+                <div className="relative z-10 flex flex-col items-center gap-2">
+                  <div className="w-10 h-10 rounded-xl bg-white shadow-sm border border-border flex items-center justify-center">
+                    <Upload className="w-5 h-5 text-primary" />
+                  </div>
+                  <span className="text-[11px] text-foreground/60">Drop your room photo or click to browse</span>
+                </div>
               </div>
             )}
           </div>
@@ -139,19 +161,20 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
             <span className="text-[10px] font-bold text-primary uppercase tracking-widest">Step 2:</span>
             <span className="text-xs text-foreground font-medium">How should it feel?</span>
           </div>
-          <div className="grid grid-cols-4 gap-2">
+          <div className="grid grid-cols-3 gap-2">
             {moods.map((m) => (
               <button
                 key={m.id}
                 onClick={() => handleMood(m.id)}
-                className={`rounded-2xl py-3 px-1 text-center transition-all duration-300 active:scale-[0.94] bg-gradient-to-br ${m.color} border ${
+                className={`rounded-2xl py-2.5 px-2 text-center transition-all duration-300 active:scale-[0.94] bg-gradient-to-br ${m.color} border-2 ${
                   mood === m.id
-                    ? "border-primary shadow-md ring-2 ring-primary/20"
+                    ? "border-primary shadow-md ring-1 ring-primary/20"
                     : "border-transparent hover:shadow-sm"
                 }`}
               >
                 <span className="text-lg block">{m.emoji}</span>
                 <span className="text-[10px] font-semibold mt-0.5 block text-foreground/80">{m.label}</span>
+                <span className="text-[8px] block text-muted-foreground mt-0.5 leading-tight">{m.desc}</span>
               </button>
             ))}
           </div>
@@ -187,18 +210,26 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-1.5 mt-3">
+          {/* Style cards with images */}
+          <div className="grid grid-cols-5 gap-1.5 mt-3">
             {styles.map((s) => (
               <button
-                key={s}
-                onClick={() => setStyle(s)}
-                className={`px-3 py-1.5 rounded-full text-[11px] font-medium transition-all duration-200 active:scale-[0.95] ${
-                  style === s
-                    ? "bg-primary/15 text-primary border border-primary/30"
-                    : "bg-white border border-border hover:border-primary/30 text-muted-foreground"
+                key={s.id}
+                onClick={() => setStyle(s.id)}
+                className={`rounded-xl overflow-hidden transition-all duration-200 active:scale-[0.95] border-2 group ${
+                  style === s.id
+                    ? "border-primary shadow-md ring-1 ring-primary/20"
+                    : "border-transparent hover:border-primary/30"
                 }`}
               >
-                {s}
+                <div className="aspect-square overflow-hidden">
+                  <img src={s.image} alt={s.id} className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110" />
+                </div>
+                <div className="py-1 px-0.5 bg-white">
+                  <span className={`text-[9px] font-medium block text-center ${style === s.id ? "text-primary" : "text-muted-foreground"}`}>
+                    {s.id}
+                  </span>
+                </div>
               </button>
             ))}
           </div>
@@ -213,9 +244,9 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
           <button
             onClick={() => onGenerate({ mood, budget, style, image })}
             disabled={isGenerating}
-            className="w-full py-4 rounded-2xl font-semibold text-sm gradient-primary text-primary-foreground
-              transition-all duration-200 active:scale-[0.97] hover:shadow-lg hover:shadow-primary/25
-              disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group"
+            className="w-full py-4 rounded-2xl font-semibold text-sm bg-primary text-primary-foreground
+              transition-all duration-200 active:scale-[0.97] hover:brightness-90 shadow-lg shadow-primary/20
+              disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isGenerating ? (
               <span className="flex items-center justify-center gap-2">
@@ -223,12 +254,10 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
                 Generating...
               </span>
             ) : (
-              <>
-                <span className="relative z-10">✨ Generate My Design</span>
-                <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12" />
-              </>
+              "✨ Generate My Design"
             )}
           </button>
+          <p className="text-[10px] text-muted-foreground text-center mt-2">Usually ready in 15 seconds</p>
         </section>
       </div>
     </aside>

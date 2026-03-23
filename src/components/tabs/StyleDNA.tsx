@@ -10,11 +10,15 @@ interface Props {
 export default function StyleDNA({ config }: Props) {
   const personality = config?.mood === "luxury" ? "The Curator" :
     config?.mood === "energy" ? "The Trailblazer" :
-    config?.mood === "cozy" ? "The Homebody" : "The Minimalist";
+    config?.mood === "cozy" ? "The Homebody" :
+    config?.mood === "bold" ? "The Maverick" :
+    config?.mood === "minimal" ? "The Purist" : "The Minimalist";
 
   const tagline = config?.mood === "luxury" ? "Elegance in every detail" :
     config?.mood === "energy" ? "Bold moves, vibrant living" :
-    config?.mood === "cozy" ? "Warmth as a lifestyle" : "Less is the ultimate luxury";
+    config?.mood === "cozy" ? "Warmth as a lifestyle" :
+    config?.mood === "bold" ? "Statement living, unapologetic style" :
+    config?.mood === "minimal" ? "Space is the ultimate luxury" : "Less is the ultimate luxury";
 
   return (
     <div className="flex justify-center">
@@ -43,7 +47,7 @@ export default function StyleDNA({ config }: Props) {
           ))}
         </div>
 
-        <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-medium gradient-primary text-primary-foreground transition-all duration-200 active:scale-[0.96] hover:shadow-lg hover:shadow-primary/20">
+        <button className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-medium bg-primary text-primary-foreground transition-all duration-200 active:scale-[0.96] hover:brightness-90 shadow-sm">
           <Share2 className="w-3.5 h-3.5" />
           Share Style DNA
         </button>
