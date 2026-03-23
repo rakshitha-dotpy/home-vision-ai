@@ -1,0 +1,52 @@
+/* src/styles/animations.css */
+
+/* Result section: fadeInUp animation on mount */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  /* initial state to prevent flicker */
+  opacity: 0; 
+}
+
+/* Staggered step cards (already handled via inline animationDelay, but defining base here if needed) */
+.step-card {
+  animation: fadeInUp 0.5s ease-out forwards;
+  opacity: 0;
+}
+
+/* Specific component overrides requested in prompt */
+
+/* Mood cards: scale(1.03) on hover, smooth 200ms transition */
+.mood-calm button:hover,
+.mood-luxury button:hover,
+.mood-cozy button:hover,
+.mood-energy button:hover,
+.mood-bold button:hover,
+.mood-minimal button:hover,
+section:nth-of-type(2) button:hover {
+  transform: scale(1.03) translateY(-2px);
+  transition: all 200ms ease-out;
+}
+
+/* Generate button: scale(1.02) on hover, subtle box-shadow pulse */
+@keyframes buttonPulse {
+  0% { box-shadow: 0 0 0 0 rgba(196, 98, 45, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(196, 98, 45, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(196, 98, 45, 0); }
+}
+
+section:nth-of-type(4) button:not(:disabled):hover {
+  transform: scale(1.02);
+  animation: buttonPulse 2s infinite;
+  transition: transform 200ms ease-out;
+}

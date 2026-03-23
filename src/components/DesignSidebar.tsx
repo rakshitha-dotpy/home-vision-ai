@@ -6,6 +6,7 @@ import styleMinimal from "@/assets/style-minimal.jpg";
 import styleJapandi from "@/assets/style-japandi.jpg";
 import styleBoho from "@/assets/style-boho.jpg";
 import styleClassic from "@/assets/style-classic.jpg";
+import DimensionInput from "./DimensionInput";
 
 type Mood = "calm" | "luxury" | "cozy" | "energy" | "bold" | "minimal";
 
@@ -34,7 +35,7 @@ const steps = [
 ];
 
 interface Props {
-  onGenerate: (config: { mood: Mood; budget: number; style: string; image: string | null }) => void;
+  onGenerate: (config: { mood: Mood; budget: number; style: string; image: string | null; length: number; width: number; height: number; area: number }) => void;
   isGenerating: boolean;
 }
 
@@ -43,6 +44,7 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
   const [budget, setBudget] = useState(25000);
   const [style, setStyle] = useState("Modern");
   const [image, setImage] = useState<string | null>(null);
+  const [dimensions, setDimensions] = useState({ length: 12, width: 10, height: 9 });
   const [dragActive, setDragActive] = useState(false);
 
   const currentStep = image ? (mood ? (budget ? 4 : 3) : 2) : 1;
@@ -76,6 +78,13 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
   };
 
   const formatBudget = (v: number) => `₹${v.toLocaleString("en-IN")}`;
+
+  const getBudgetLabel = (v: number) => {
+    if (v < 20000) return "Budget-friendly makeover";
+    if (v <= 50000) return "Mid-range transformation";
+    if (v <= 75000) return "Premium redesign";
+    return "Luxury renovation";
+  };
 
   return (
     <aside className="w-full lg:w-[360px] shrink-0 bg-white/50 backdrop-blur-md border-r border-border overflow-y-auto max-h-[calc(100vh-4rem)]">
@@ -148,12 +157,19 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
                   <div className="w-10 h-10 rounded-xl bg-white shadow-sm border border-border flex items-center justify-center">
                     <Upload className="w-5 h-5 text-primary" />
                   </div>
-                  <span className="text-[11px] text-foreground/60">Drop your room photo or click to browse</span>
                 </div>
               </div>
             )}
           </div>
         </section>
+
+        {/* Step 1B: Room Dimensions */}
+        <DimensionInput 
+          length={dimensions.length} 
+          width={dimensions.width} 
+          height={dimensions.height} 
+          onChange={setDimensions} 
+        />
 
         {/* Step 2: Mood */}
         <section>
@@ -188,10 +204,11 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
           </div>
 
           <div className="bg-white rounded-2xl border border-border p-3.5 space-y-3 shadow-sm">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center mb-1">
               <span className="text-xs text-muted-foreground">Budget</span>
               <span className="text-sm font-bold text-success">{formatBudget(budget)}</span>
             </div>
+            <div className="text-[10px] text-primary font-medium mb-2">{getBudgetLabel(budget)}</div>
             <input
               type="range"
               min={5000}
@@ -242,7 +259,14 @@ export default function DesignSidebar({ onGenerate, isGenerating }: Props) {
             <span className="text-xs text-foreground font-medium">See the magic</span>
           </div>
           <button
-            onClick={() => onGenerate({ mood, budget, style, image })}
+            onClick={() => onGenerate({ 
+              mood, 
+              budget, 
+              style, 
+              image, 
+              ...dimensions,
+              area: dimensions.length * dimensions.width 
+            })}
             disabled={isGenerating}
             className="w-full py-4 rounded-2xl font-semibold text-sm bg-primary text-primary-foreground
               transition-all duration-200 active:scale-[0.97] hover:brightness-90 shadow-lg shadow-primary/20
