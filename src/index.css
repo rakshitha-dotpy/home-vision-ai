@@ -4,16 +4,16 @@
 
 @layer base {
   :root {
-    --background: 30 25% 96%;
-    --foreground: 25 20% 15%;
+    --background: 33 30% 95%;
+    --foreground: 25 30% 12%;
 
     --card: 0 0% 100%;
-    --card-foreground: 25 20% 15%;
+    --card-foreground: 25 30% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 25 20% 15%;
+    --popover-foreground: 25 30% 12%;
 
-    --primary: 25 55% 45%;
+    --primary: 20 65% 47%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 150 30% 40%;
@@ -23,7 +23,7 @@
     --muted-foreground: 25 10% 45%;
 
     --accent: 30 20% 93%;
-    --accent-foreground: 25 20% 15%;
+    --accent-foreground: 25 30% 12%;
 
     --destructive: 0 65% 50%;
     --destructive-foreground: 0 0% 100%;
@@ -33,18 +33,18 @@
 
     --border: 30 15% 85%;
     --input: 30 15% 85%;
-    --ring: 25 55% 45%;
+    --ring: 20 65% 47%;
 
     --radius: 0.75rem;
 
     --sidebar-background: 30 20% 97%;
-    --sidebar-foreground: 25 20% 15%;
-    --sidebar-primary: 25 55% 45%;
+    --sidebar-foreground: 25 30% 12%;
+    --sidebar-primary: 20 65% 47%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 30 20% 93%;
-    --sidebar-accent-foreground: 25 20% 15%;
+    --sidebar-accent-foreground: 25 30% 12%;
     --sidebar-border: 30 15% 88%;
-    --sidebar-ring: 25 55% 45%;
+    --sidebar-ring: 20 65% 47%;
   }
 }
 
@@ -68,32 +68,28 @@
     @apply glass-panel rounded-2xl shadow-sm;
   }
 
-  .glow-primary {
-    box-shadow: 0 0 20px hsl(25 55% 45% / 0.2), 0 0 60px hsl(25 55% 45% / 0.08);
-  }
-
-  .glow-secondary {
-    box-shadow: 0 0 20px hsl(150 30% 40% / 0.2), 0 0 60px hsl(150 30% 40% / 0.08);
-  }
-
-  .gradient-primary {
-    @apply bg-gradient-to-r from-primary to-secondary;
-  }
-
   .mood-calm {
-    background: linear-gradient(135deg, hsl(30 25% 96%) 0%, hsl(150 20% 93%) 50%, hsl(160 15% 95%) 100%);
+    background: linear-gradient(135deg, hsl(33 30% 95%) 0%, hsl(150 20% 93%) 50%, hsl(160 15% 95%) 100%);
   }
 
   .mood-luxury {
-    background: linear-gradient(135deg, hsl(30 25% 96%) 0%, hsl(280 15% 93%) 50%, hsl(270 12% 95%) 100%);
+    background: linear-gradient(135deg, hsl(33 30% 95%) 0%, hsl(280 15% 93%) 50%, hsl(270 12% 95%) 100%);
   }
 
   .mood-cozy {
-    background: linear-gradient(135deg, hsl(30 25% 96%) 0%, hsl(25 30% 92%) 50%, hsl(20 25% 94%) 100%);
+    background: linear-gradient(135deg, hsl(33 30% 95%) 0%, hsl(25 30% 92%) 50%, hsl(20 25% 94%) 100%);
   }
 
   .mood-energy {
-    background: linear-gradient(135deg, hsl(30 25% 96%) 0%, hsl(10 25% 93%) 50%, hsl(350 20% 95%) 100%);
+    background: linear-gradient(135deg, hsl(33 30% 95%) 0%, hsl(10 25% 93%) 50%, hsl(350 20% 95%) 100%);
+  }
+
+  .mood-bold {
+    background: linear-gradient(135deg, hsl(33 30% 95%) 0%, hsl(0 20% 92%) 50%, hsl(340 15% 94%) 100%);
+  }
+
+  .mood-minimal {
+    background: linear-gradient(135deg, hsl(33 30% 95%) 0%, hsl(220 10% 94%) 50%, hsl(210 8% 96%) 100%);
   }
 
   /* Ambient light effects */

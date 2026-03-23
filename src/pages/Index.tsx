@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import Navbar from "@/components/Navbar";
+import LandingPage from "@/components/LandingPage";
 import DesignSidebar from "@/components/DesignSidebar";
 import ResultPanel from "@/components/ResultPanel";
 import LoadingOverlay from "@/components/LoadingOverlay";
@@ -12,6 +13,7 @@ interface Config {
 }
 
 export default function Index() {
+  const [activeTab, setActiveTab] = useState("Home");
   const [isGenerating, setIsGenerating] = useState(false);
   const [hasResult, setHasResult] = useState(false);
   const [config, setConfig] = useState<Config | null>(null);
@@ -26,21 +28,33 @@ export default function Index() {
     }, 2500);
   }, []);
 
+  const handleTabChange = (tab: string) => {
+    setActiveTab(tab);
+    if (tab === "Home") {
+      setHasResult(false);
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col relative">
-      {/* Ambient light effects */}
       <div className="sunlight-glow" />
       <div className="lamp-glow" />
 
-      <Navbar />
-      <div className="flex flex-1 flex-col lg:flex-row relative z-10">
-        <DesignSidebar onGenerate={handleGenerate} isGenerating={isGenerating} />
-        {isGenerating ? (
-          <LoadingOverlay />
-        ) : (
-          <ResultPanel hasResult={hasResult} config={config} />
-        )}
-      </div>
+      <Navbar activeTab={activeTab} onTabChange={handleTabChange} />
+
+      {activeTab === "Studio" ? (
+        <div className="flex flex-1 flex-col lg:flex-row relative z-10">
+          <DesignSidebar onGenerate={handleGenerate} isGenerating={isGenerating} />
+          {isGenerating ? (
+            <LoadingOverlay />
+          ) : (
+            <ResultPanel hasResult={hasResult} config={config} />
+          )}
+        </div>
+      ) : (
+        <LandingPage onStartStudio={() => setActiveTab("Studio")} />
+      )}
     </div>
   );
 }
