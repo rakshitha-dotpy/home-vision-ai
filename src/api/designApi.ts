@@ -1,82 +1,82 @@
-export interface FurnitureItem {
-  id: string;
-  type: string;
-  label: string;
-  x: number;
-  y: number;
+const API_URL = 'https://home-vision-ai.onrender.com/api/generate-design';
+
+export async function generateDesign(data: {
+  image: string | null;
+  mood: string;
+  budget: number;
+  style: string;
+  length: number;
   width: number;
   height: number;
-  rotation: number;
-  color: string;
-}
-
-export interface DesignResult {
-  id: string;
-  style: string;
-  mood: string;
-  transformedImage: string;
-  colorPalette: string[];  // 5 hex colors
-  estimatedCostMin: number;
-  estimatedCostMax: number;
-  furnitureList: string[];
-}
-
-const MOCK_RESULTS: DesignResult[] = [
-  {
-    id: "modern",
-    style: "Modern",
-    mood: "Calm",
-    transformedImage: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800",
-    colorPalette: ["#F5F0E8","#C8622A","#2C2C2C","#8A7D6E","#D4C5B0"],
-    estimatedCostMin: 45000,
-    estimatedCostMax: 80000,
-    furnitureList: ["Sectional Sofa","Coffee Table","Floor Lamp","Bookshelf"]
-  },
-  {
-    id: "japandi",
-    style: "Japandi",
-    mood: "Calm",
-    transformedImage: "https://images.unsplash.com/photo-1600210492493-0946911123ea?w=800",
-    colorPalette: ["#E8E0D0","#8B7355","#4A4A4A","#C4B49A","#6B8F71"],
-    estimatedCostMin: 35000,
-    estimatedCostMax: 65000,
-    furnitureList: ["Low Profile Sofa","Wooden Coffee Table","Washi Lamp","Bamboo Plant"]
-  },
-  {
-    id: "luxury",
-    style: "Luxury",
-    mood: "Cozy",
-    transformedImage: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800",
-    colorPalette: ["#1A1208","#C8A96E","#8B6040","#D4C5A0","#2A1F0E"],
-    estimatedCostMin: 120000,
-    estimatedCostMax: 250000,
-    furnitureList: ["Chesterfield Sofa","Marble Coffee Table","Crystal Chandelier","Persian Rug"]
-  }
-];
-
-export async function generateDesign(
-  image: File | string | null,
-  style: string,
-  mood: string,
-  layout?: FurnitureItem[]
-): Promise<DesignResult[]> {
+  area?: number;
+}) {
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 30000);
+  const timeoutId = setTimeout(() => controller.abort(), 30000);
 
   try {
-    // Stagger results — first at 2s, second at 2.8s, third at 3.5s
-    const results = await Promise.all([
-      new Promise<DesignResult>(r => setTimeout(() => r(MOCK_RESULTS[0]), 2000)),
-      new Promise<DesignResult>(r => setTimeout(() => r(MOCK_RESULTS[1]), 2800)),
-      new Promise<DesignResult>(r => setTimeout(() => r(MOCK_RESULTS[2]), 3500)),
-    ]);
-    return results;
-  } catch (err) {
-    if ((err as Error).name === "AbortError") {
-      throw new Error("Request timed out. Please try again.");
+    // Mock implementation
+    await new Promise(resolve => setTimeout(resolve, 2500));
+    
+    const area = data.area || (data.length * data.width);
+    
+    return {
+      success: true,
+      transformedImage: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800",
+      generatedImage: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800",
+      style: data.style,
+      mood: data.mood,
+      description: `A stunning ${data.style} redesign with a ${data.mood} mood.`,
+      roomAnalysis: {
+        area: `${area} sq ft`,
+        volume: `${area * data.height} cubic ft`,
+        roomSize: area > 200 ? "Large" : "Medium",
+        budgetPerSqFt: `₹${Math.round(data.budget / area)}/sq ft`,
+        recommendation: "Focus on balancing natural light and warm textures."
+      },
+      colorPalette: ["#f5f0e8", "#c8622a", "#8a7d6e", "#1a1208"],
+      items: [
+        { name: "Accent Chair", description: "Premium fabric seating", price: "₹12,499", tag: "Furniture", where: "Urban Ladder" },
+        { name: "Floor Lamp", description: "Warm ambient glow", price: "₹4,299", tag: "Lighting", where: "IKEA" },
+        { name: "Textured Rug", description: "Soft handwoven rug", price: "₹8,900", tag: "Decor", where: "Home Centre" }
+      ],
+      designTips: [
+        "Layer lighting (ambient, task, accent) to create depth and warmth.",
+        "Use mirrors opposite windows to bounce natural light across the room."
+      ],
+      processingTime: "2.5s"
+    };
+
+    /*
+    const formData = new FormData();
+    if (data.image) {
+      formData.append('image_data', data.image);
     }
-    throw err;
+    formData.append('mood', data.mood);
+    formData.append('budget', data.budget.toString());
+    formData.append('style', data.style);
+    formData.append('length', data.length.toString());
+    formData.append('width', data.width.toString());
+    formData.append('height', data.height.toString());
+
+    const response = await fetch(API_URL, {
+      method: 'POST',
+      body: formData,
+      signal: controller.signal
+    });
+    
+    if (!response.ok) {
+      throw new Error('Server error: ' + response.status);
+    }
+    
+    return await response.json();
+    */
+    
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('This is taking too long. Please try again.');
+    }
+    throw new Error('Transform failed. Please try again.');
   } finally {
-    clearTimeout(timeout);
+    clearTimeout(timeoutId);
   }
 }
